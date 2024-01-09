@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Immutable;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Data
 @Entity
 @Immutable
@@ -21,5 +24,7 @@ public class SlobodniSobi {
     private Integer id_hotel;
     private String name;
     private String room_type;
+    private LocalDate check_in_date;
+    private LocalDate check_out_date;
     private Integer price;
 }

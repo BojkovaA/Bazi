@@ -21,5 +21,10 @@ public class ListaHoteliServiceImpl implements ListaHoteliService {
     public List<ListaHoteli> getAllHotelsWithCity() {
         return this.listaHoteliRepository.findAllListaHoteli();
     }
+
+    @Override
+    public List<ListaHoteli> getAllHotelsByCityName(String city) {
+        return listaHoteliRepository.findAllListaHoteliByCity(city);
+    }
 }
 

@@ -16,4 +16,7 @@ public interface ListaHoteliRepository extends JpaRepository<ListaHoteli, String
     @Query(value = "SELECT * FROM lista_hoteli ", nativeQuery = true)
     List<ListaHoteli> findAllListaHoteli();
 
+    @Query(value = "SELECT * FROM lista_hoteli WHERE city_name = :city", nativeQuery = true)
+    List<ListaHoteli> findAllListaHoteliByCity(@Param("city") String city);
+
 }

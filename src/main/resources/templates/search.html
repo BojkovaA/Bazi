@@ -54,12 +54,12 @@
         <ul class="navbar-nav">
           <div th:if="${session.user==null}">
             <li class="nav-item">
-              <a class="nav-link text-danger" aria-current="page" href="/login">Check Free Rooms</a>
+              <a class="nav-link text-danger" aria-current="page" href="/home/free_rooms">Check Free Rooms</a>
             </li>
           </div>
           <div th:if="${session.user==null}">
             <li class="nav-item mx-3">
-              <a class="nav-link text-danger" href="/register">SignUp</a>
+              <a class="nav-link text-danger" href="/home/rezervacii">Reservations</a>
             </li>
           </div>
           <div th:if="${session.user!=null}">
