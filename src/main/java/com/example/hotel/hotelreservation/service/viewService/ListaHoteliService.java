@@ -10,5 +10,5 @@ public interface ListaHoteliService{
 
     //List<ListaHoteli> findAllListaHoteli(String city);
 //    List<ListaHoteli> findHotelsByCity(String cityName);
-//    List<ListaHoteli> getAllHotelsByCity(String city);
+    List<ListaHoteli> getAllHotelsWithCity();
 }

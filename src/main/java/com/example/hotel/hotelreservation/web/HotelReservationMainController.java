@@ -25,47 +25,32 @@ public class HotelReservationMainController {
     }
 
     @GetMapping
-    public String getMainPage(){
+    public String getMainPage(Model model){
+        List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
+        model.addAttribute("hotelsWithCities", hotelsWithCities);
         return "home";
     }
 
     @GetMapping("/add")
     public String getAddHotel(){ return "addhotel"; }
 
+
     @GetMapping("/search")
     public String getSearchHotel(Model model){
-        //model.addAttribute("list", listaHoteliService.findAllListaHoteli(city));
+        List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
+        model.addAttribute("hotelsWithCities", hotelsWithCities);
         return "search";
     }
-//    @PostMapping("/search")
-//    public String postSearchHotel(Model model, @RequestParam String city)
-//    {
-//        //List<ListaHoteli> hotels = listaHoteliService.findAllListaHoteli(city);
-//        //model.addAttribute("hotels", hotels);
-//        return "search";
-//        //model.addAttribute("list",listaHoteliService.getAllHotelsByCity(city));
-//        //return "search";
-//    }
-        @PostMapping("/search")
-        public String postSearchHotel(Model model, @RequestParam String city)
-        {
-            // Добивање на хотелите за дадениот град
-//            List<ListaHoteli> hotels = listaHoteliService.getAllHotelsByCity(city);
-//            model.addAttribute("hotels", hotels);
+    @PostMapping("/search")
+    public String postSearchHotel(Model model, @RequestParam String city) {
+        if (city == null) {
+            List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
+            model.addAttribute("hotelsWithCities", hotelsWithCities);
             return "search";
         }
+        return "search";
+    }
 
-//    @GetMapping("/search")
-//    public String getSearchHotel(Model model) {
-//        return "search";
-//    }
-//
-//    @PostMapping("/search")
-//    public String postSearchHotel(Model model, @RequestParam String city) {
-//        List<ListaHoteli> hotels = listaHoteliService.findHotelsByCity(city);
-//        model.addAttribute("hotels", hotels);
-//        return "search";
-//    }
 
     @GetMapping("/reservation")
     public String getMakeAReservation(Model model){

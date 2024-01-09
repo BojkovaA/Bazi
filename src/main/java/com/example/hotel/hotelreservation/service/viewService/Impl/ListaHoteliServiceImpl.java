@@ -10,38 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class ListaHoteliServiceImpl implements ListaHoteliService {
-//    private final ListaHoteliRepository listaHoteliRepository;
-//
-//    @Autowired
-//    public ListaHoteliServiceImpl(ListaHoteliRepository listaHoteliRepository) {
-//        this.listaHoteliRepository = listaHoteliRepository;
-//    }
-//
-//    @Override
-//    public List<ListaHoteli> findAllListaHoteli(String city) {
-//        return listaHoteliRepository.findAllListaHoteli(city);
-//    }
+    private final ListaHoteliRepository listaHoteliRepository;
 
-//    private final ListaHoteliRepository listaHoteliRepository;
-//
-//    @Autowired
-//    public ListaHoteliServiceImpl(ListaHoteliRepository listaHoteliRepository) {
-//        this.listaHoteliRepository = listaHoteliRepository;
-//    }
-//
-//    @Override
-//    public List<ListaHoteli> findHotelsByCity(String cityName) {
-//        return listaHoteliRepository.findByCityName(cityName);
-//    }
-    //private final ListaHoteliRepository listaHoteliRepository;
+    @Autowired
+    public ListaHoteliServiceImpl(ListaHoteliRepository listaHoteliRepository) {
+        this.listaHoteliRepository = listaHoteliRepository;
+    }
 
-//    @Autowired
-//    public ListaHoteliServiceImpl(ListaHoteliRepository listaHoteliRepository) {
-//        this.listaHoteliRepository = listaHoteliRepository;
-//    }
-//
-//    @Override
-//    public List<ListaHoteli> getAllHotelsByCity(String city) {
-//        return listaHoteliRepository.findAllByCityName(city);
-//    }
+    @Override
+    public List<ListaHoteli> getAllHotelsWithCity() {
+        return this.listaHoteliRepository.findAllListaHoteli();
+    }
 }
+
