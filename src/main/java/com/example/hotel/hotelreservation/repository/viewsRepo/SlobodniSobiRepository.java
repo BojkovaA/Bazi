@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SlobodniSobiRepository extends JpaRepository<SlobodniSobi, Integer> {
-    @Query(value = "SELECT * FROM slobodni_sobi WHERE  check_in_date < :startDate or check_out_date < :endDate", nativeQuery = true)
+    @Query(value = "SELECT * FROM slobodni_sobi WHERE (check_out_date < :startDate or check_in_date > :endDate)", nativeQuery = true)
     List<SlobodniSobi> findAllSlobodniSobiByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 }

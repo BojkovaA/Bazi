@@ -1,9 +1,15 @@
 package com.example.hotel.hotelreservation.web;
 
+import com.example.hotel.hotelreservation.model.reports.MonthlyReservations;
+import com.example.hotel.hotelreservation.model.reports.MostVisitedHotelInMonth;
+import com.example.hotel.hotelreservation.model.reports.YearlyReservations;
 import com.example.hotel.hotelreservation.model.views.ListaHoteli;
 import com.example.hotel.hotelreservation.model.views.Rezervacii;
 import com.example.hotel.hotelreservation.model.views.SlobodniSobi;
 import com.example.hotel.hotelreservation.service.modelService.HotelService;
+import com.example.hotel.hotelreservation.service.reportService.MonthlyReservationsService;
+import com.example.hotel.hotelreservation.service.reportService.MostVisitedHotelInMonthService;
+import com.example.hotel.hotelreservation.service.reportService.YearlyReservationsService;
 import com.example.hotel.hotelreservation.service.viewService.ListaHoteliService;
 import com.example.hotel.hotelreservation.service.viewService.RezervaciiService;
 import com.example.hotel.hotelreservation.service.viewService.SlobodniSobiService;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,12 +33,16 @@ public class HotelReservationMainController {
     private final ListaHoteliService listaHoteliService;
     private final SlobodniSobiService slobodniSobiService;
     private final RezervaciiService rezervaciiService;
+    private final MonthlyReservationsService monthlyReservationsService;
+    private final YearlyReservationsService yearlyReservationsService;
 
-    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService) {
+    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService) {
         this.hotelService = hotelService;
         this.listaHoteliService = listaHoteliService;
         this.slobodniSobiService = slobodniSobiService;
         this.rezervaciiService = rezervaciiService;
+        this.monthlyReservationsService = monthlyReservationsService;
+        this.yearlyReservationsService = yearlyReservationsService;
     }
 
     @GetMapping
@@ -54,6 +65,8 @@ public class HotelReservationMainController {
         model.addAttribute("freeRooms", freeRooms);
         return "free_rooms";
     }
+
+
 
     @GetMapping("/add")
     public String getAddHotel(){ return "addhotel"; }
@@ -83,6 +96,29 @@ public class HotelReservationMainController {
         model.addAttribute("rezervaciiList", rezervaciiList);
         return "rezervacii";
     }
+
+    @PostMapping("/rezervacii")
+    public String showReservations(Model model,
+                                   @RequestParam("selectedMonth") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) BigDecimal selectedMonth) {
+        List<MonthlyReservations> reservations = monthlyReservationsService.getReservationsByMonth(selectedMonth);
+        model.addAttribute("reservations", reservations);
+
+        return "reservationsMonth";
+    }
+
+    @GetMapping("/yearlyReservations")
+    public String getYearReservations(Model model) {
+        return "yearlyReservations";
+    }
+
+    @PostMapping("/yearlyReservations")
+    public String showYearlyReservations(Model model,
+                                         @RequestParam("selectedYear") BigDecimal selectedYear) {
+        List<YearlyReservations> yearlyReservations = yearlyReservationsService.getYearlyReservations(selectedYear);
+        model.addAttribute("yearlyReservations", yearlyReservations);
+        return "yearlyReservations";
+    }
+
 
     @GetMapping("/reservation")
     public String getMakeAReservation(Model model){

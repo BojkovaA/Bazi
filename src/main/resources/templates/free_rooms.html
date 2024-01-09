@@ -27,6 +27,15 @@
             display: block;
             margin-bottom: 5px;
         }
+        .custom-button {
+            border-radius: 10px;
+            background-color: #fdbf07;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
     </style>
 
 </head>
@@ -53,15 +62,9 @@
                             <a class="nav-link text-danger" href="/home/rezervacii">Reservations</a>
                         </li>
                     </div>
-                    <div th:if="${session.user!=null}">
-                        <li class="nav-item">
-
-                            <a class="nav-link btn btn-warning text-white fw-bold" href="/home/add">AddHotel</a>
-                        </li>
-                    </div>
-                    <div th:if="${session.user!=null}">
+                    <div th:if="${session.user==null}">
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-danger" href="/logout">Log Out</a>
+                            <a class="nav-link text-danger" href="/home/yearlyReservations">Yearly Reservations</a>
                         </li>
                     </div>
                     <li class="nav-item" style="margin-left: 10px">
@@ -85,7 +88,7 @@
 
         <br>
 
-        <button type="submit">Search</button>
+        <button type="submit" class="custom-button">Search</button>
     </form>
 </div>
 <!-- Display the results as cards in a grid -->

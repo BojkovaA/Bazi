@@ -27,6 +27,9 @@
             display: block;
             margin-bottom: 5px;
         }
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         .custom-button {
             border-radius: 10px;
             background-color: #fdbf07;
@@ -75,7 +78,6 @@
         </div>
     </div>
 </nav>
-<h3>Show Monthly Reservations</h3>
 <form action="rezervacii" method="post">
     <label for="selectedMonth">Select Month:</label>
     <select name="selectedMonth" id="selectedMonth">
@@ -94,19 +96,17 @@
     </select>
     <button type="submit" class="custom-button">Show Reservations</button>
 </form>
-<h1 style="color: #ffc957">ALL RESERVATIONS</h1>
-</div>
-<div th:if="${rezervaciiList != null}">
-    <div class="row row-cols-1 row-cols-md-3">
-        <div th:each="rezervacija : ${rezervaciiList}" class="col mb-4">
-            <div class="card bg-light" style="box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);">
-                <div class="card-body">
-                    <p class="card-title">First Name: <span th:text="${rezervacija.first_name}"></span></p>
-                    <p class="card-text">Last Name: <span th:text="${rezervacija.last_name}"></span></p>
-                    <p class="card-text">Hotel Name: <span th:text="${rezervacija.name}"></span></p>
-                    <p class="card-text">Reservation Date: <span th:text="${rezervacija.reservation_date}"></span></p>
-                    <p class="card-text">Room Number: <span th:text="${rezervacija.room_number}"></span></p>
-                </div>
+<!-- Prikazi rezervacije -->
+<!-- Prikazi rezervacije -->
+<div class="row">
+    <!-- Prikazi rezervacije -->
+    <div th:each="reservation : ${reservations}" class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Hotel Name: <span th:text="${reservation.name}"></span></h5>
+                <p class="card-text">Month: <span th:text="${reservation.month}"></span></p>
+                <p class="card-text">Total Reservations: <span th:text="${reservation.total_reservations}"></span></p>
+                <p class="card-text">Total Payment: <span th:text="${reservation.total_payment}"></span></p>
             </div>
         </div>
     </div>

@@ -71,7 +71,7 @@
                     </div>
                     <div th:if="${session.user==null}">
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-danger" href="/home/yearlyReservations">Yearly Reservations</a>
+                            <a class="nav-link text-danger" href="/home/most_visited">Most visited Hotel</a>
                         </li>
                     </div>
                     <li class="nav-item" style="margin-left: 10px">
@@ -83,16 +83,7 @@
     </div>
 </nav>
 <div class="centirano">
-<div class="h-75 d-flex align-items-center justify-content-center">
-    <div class="d-block">
-        <h1 class="fw-bold mb-4">Search Hotel by city</h1>
-        <form class="d-flex mt-4" th:method="POST" th:action="@{/home/search}" >
-            <input class="form-control w-75 mx-4" type="text" name="city" id="" placeholder="Input city">
-            <input class="form-control w-25 btn btn-warning text-white fw-bold" type="submit" value="Search">
-        </form>
-    </div>
-</div>
-    <h1>Search most Visited Hotel</h1>
+    <h1>Most Visited Hotel</h1>
     <form action="/home/most_visited" method="post">
         <label for="selectedMonth">Select Month:</label>
         <select name="selectedMonth" id="selectedMonth">
@@ -115,13 +106,16 @@
 
         <button type="submit" class="custom-button">Show Most Visited Hotel</button>
     </form>
-    <div class="hotel-container">
-    <div th:each="hotel : ${hotelsWithCities}" class="hotel-card">
-        <h3 th:text="${hotel.hotel_name}"></h3>
-        <p th:text="${hotel.city_name}"></p>
-        <img th:src="@{'/images/' + ${hotel.hotel_name.toLowerCase().replaceAll('[^a-z0-9]', '_') + '.png'}}" alt="Hotel Image" style="max-width: 200px; max-height: 150px;" class="sliki">
+
+    <!-- Prikaz najposećenijeg hotela u kartici -->
+    <div th:if="${mostVisitedHotelList != null and not #lists.isEmpty(mostVisitedHotelList)}" class="hotel-container">
+        <div class="hotel-card">
+            <h3 th:text="${mostVisitedHotelList[0].name}"></h3>
+            <p th:text="${'Month: ' + mostVisitedHotelList[0].month + ' - Year: ' + mostVisitedHotelList[0].year}"></p>
+            <p th:text="${'Reservations: ' + mostVisitedHotelList[0].total_reservations}"></p>
+            <p th:text="${'Total Payment: ' + mostVisitedHotelList[0].total_payment}"></p>
+        </div>
     </div>
-</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
