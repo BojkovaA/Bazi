@@ -35,14 +35,16 @@ public class HotelReservationMainController {
     private final RezervaciiService rezervaciiService;
     private final MonthlyReservationsService monthlyReservationsService;
     private final YearlyReservationsService yearlyReservationsService;
+    private final MostVisitedHotelInMonthService mostVisitedHotelInMonthService;
 
-    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService) {
+    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService1) {
         this.hotelService = hotelService;
         this.listaHoteliService = listaHoteliService;
         this.slobodniSobiService = slobodniSobiService;
         this.rezervaciiService = rezervaciiService;
         this.monthlyReservationsService = monthlyReservationsService;
         this.yearlyReservationsService = yearlyReservationsService;
+        this.mostVisitedHotelInMonthService = mostVisitedHotelInMonthService1;
     }
 
     @GetMapping
@@ -117,6 +119,21 @@ public class HotelReservationMainController {
         List<YearlyReservations> yearlyReservations = yearlyReservationsService.getYearlyReservations(selectedYear);
         model.addAttribute("yearlyReservations", yearlyReservations);
         return "yearlyReservations";
+    }
+
+    @GetMapping("/most_visited_hotel")
+    public String getMostVisitedHotelPage() {
+        return "most_visited";
+    }
+
+    @PostMapping("/most_visited")
+    public String showMostVisitedHotel(Model model,
+                                       @RequestParam("selectedMonth") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) BigDecimal selectedMonth,
+                                       @RequestParam("selectedYear") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) BigDecimal selectedYear) {
+        List<MostVisitedHotelInMonth> mostVisitedHotelList = mostVisitedHotelInMonthService.getMostVisitedHotelInMonth(selectedMonth, selectedYear);
+        model.addAttribute("mostVisitedHotelList", mostVisitedHotelList);
+
+        return "most_visited";
     }
 
 
