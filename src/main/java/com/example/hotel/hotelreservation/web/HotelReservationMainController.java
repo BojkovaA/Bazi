@@ -7,6 +7,7 @@ import com.example.hotel.hotelreservation.model.views.ListaHoteli;
 import com.example.hotel.hotelreservation.model.views.Rezervacii;
 import com.example.hotel.hotelreservation.model.views.SlobodniSobi;
 import com.example.hotel.hotelreservation.service.modelService.HotelService;
+import com.example.hotel.hotelreservation.service.modelService.ReservationService;
 import com.example.hotel.hotelreservation.service.reportService.MonthlyReservationsService;
 import com.example.hotel.hotelreservation.service.reportService.MostVisitedHotelInMonthService;
 import com.example.hotel.hotelreservation.service.reportService.YearlyReservationsService;
@@ -14,16 +15,16 @@ import com.example.hotel.hotelreservation.service.viewService.ListaHoteliService
 import com.example.hotel.hotelreservation.service.viewService.RezervaciiService;
 import com.example.hotel.hotelreservation.service.viewService.SlobodniSobiService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/home")
@@ -36,8 +37,9 @@ public class HotelReservationMainController {
     private final MonthlyReservationsService monthlyReservationsService;
     private final YearlyReservationsService yearlyReservationsService;
     private final MostVisitedHotelInMonthService mostVisitedHotelInMonthService;
+    private final ReservationService reservationService;
 
-    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService1) {
+    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService1, ReservationService reservationService) {
         this.hotelService = hotelService;
         this.listaHoteliService = listaHoteliService;
         this.slobodniSobiService = slobodniSobiService;
@@ -45,17 +47,18 @@ public class HotelReservationMainController {
         this.monthlyReservationsService = monthlyReservationsService;
         this.yearlyReservationsService = yearlyReservationsService;
         this.mostVisitedHotelInMonthService = mostVisitedHotelInMonthService1;
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public String getMainPage(Model model){
+    public String getMainPage(Model model) {
         List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
         model.addAttribute("hotelsWithCities", hotelsWithCities);
         return "home";
     }
 
     @GetMapping("/free_rooms")
-    public String getFreeRooms(){
+    public String getFreeRooms() {
         return "free_rooms";
     }
 
@@ -69,25 +72,26 @@ public class HotelReservationMainController {
     }
 
 
-
     @GetMapping("/add")
-    public String getAddHotel(){ return "addhotel"; }
+    public String getAddHotel() {
+        return "addhotel";
+    }
 
 
     @GetMapping("/search")
-    public String getSearchHotel(Model model){
+    public String getSearchHotel(Model model) {
         List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
         model.addAttribute("hotelsWithCities", hotelsWithCities);
         return "search";
     }
+
     @PostMapping("/search")
     public String postSearchHotel(Model model, @RequestParam String city) {
         if (city == "") {
             List<ListaHoteli> hotelsWithCities = listaHoteliService.getAllHotelsWithCity();
             model.addAttribute("hotelsWithCities", hotelsWithCities);
-        }
-        else{
-            model.addAttribute("hotelsWithCities",listaHoteliService.getAllHotelsByCityName(city));
+        } else {
+            model.addAttribute("hotelsWithCities", listaHoteliService.getAllHotelsByCityName(city));
         }
         return "search";
     }
@@ -138,7 +142,37 @@ public class HotelReservationMainController {
 
 
     @GetMapping("/reservation")
-    public String getMakeAReservation(Model model){
+    public String getMakeAReservation(Model model) {
         return "reservation";
     }
+
+    @PostMapping("/reservation")
+    public ResponseEntity<String> createReservation(@RequestBody Map<String, Object> reservationData) {
+        try {
+            // Dobijanje vrednosti iz tela zahteva
+            LocalDate reservationDate = LocalDate.parse((String) reservationData.get("reservationDate"));
+            String paymentType = (String) reservationData.get("paymentType");
+            Integer price = (Integer) reservationData.get("price");
+            LocalDate checkInDate = LocalDate.parse((String) reservationData.get("checkInDate"));
+            LocalDate checkOutDate = LocalDate.parse((String) reservationData.get("checkOutDate"));
+            Integer roomNumber = (Integer) reservationData.get("roomNumber");
+            Integer hotelId = (Integer) reservationData.get("hotelId");
+            Integer guestId = (Integer) reservationData.get("guestId");
+
+            // Implementacija logike za pravljenje rezervacije u bazu
+            reservationService.createReservation(reservationDate, paymentType, price, checkInDate, checkOutDate, roomNumber, hotelId, guestId);
+
+            // Redirekcija na /home nakon uspešne rezervacije
+            return ResponseEntity.status(HttpStatus.CREATED).body("Reservation created successfully");
+        } catch (Exception e) {
+            e.printStackTrace(); // Dodajte logovanje ili ispisivanje greške radi lakšeg otklanjanja problema
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating reservation");
+        }
+    }
+
+    @GetMapping("/add_hotel")
+    public String getAddHotel(Model model) {
+        return "add_hotel";
+    }
+
 }
