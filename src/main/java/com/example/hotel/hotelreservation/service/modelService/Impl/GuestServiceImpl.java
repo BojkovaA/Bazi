@@ -3,6 +3,7 @@ package com.example.hotel.hotelreservation.service.modelService.Impl;
 import com.example.hotel.hotelreservation.model.Guest;
 import com.example.hotel.hotelreservation.repository.GuestRepository;
 import com.example.hotel.hotelreservation.service.modelService.GuestService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +17,10 @@ public class GuestServiceImpl implements GuestService {
         this.guestRepository = guestRepository;
     }
 
+    @Transactional
     @Override
-    public List<Guest> getAllGuests() {
-        return guestRepository.findAll();
-    }
+    public void createUser(String firstName, String lastName) {
 
-    @Override
-    public Guest getGuestById(Integer id) {
-        return guestRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public void saveGuest(Guest guest) {
-        guestRepository.save(guest);
-    }
-
-    @Override
-    public void deleteGuest(Integer id) {
-        guestRepository.deleteById(id);
+        guestRepository.insertGuest(firstName, lastName);
     }
 }

@@ -17,7 +17,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationServiceImpl(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
-
+    @Transactional
     @Override
     public void createReservation(
             LocalDate reservationDate,

@@ -91,6 +91,9 @@
                     <li class="nav-item" style="margin-left: 10px">
                         <a class="nav-link btn btn-warning text-white fw-bold" href="/home/add_hotel">Add Hotel</a>
                     </li>
+                    <li class="nav-item" style="margin-left: 10px">
+                        <a class="nav-link btn btn-warning text-white fw-bold" href="/home/add_user">Add User</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -99,7 +102,7 @@
 <div class="forma">
     <h1>Create Reservation</h1>
 
-    <form action="/reservation" method="post">
+    <form action="/home/reservation" method="post">
         <label for="reservationDate">Reservation Date:</label>
         <input type="date" id="reservationDate" name="reservationDate" required><br>
 
@@ -119,7 +122,6 @@
         <label for="checkOutDate">Check-out Date:</label>
         <input type="date" id="checkOutDate" name="checkOutDate" required><br>
 
-        <!-- Dropdown for Hotel ID -->
         <label for="hotelId">Hotel ID:</label>
         <select id="hotelId" name="hotelId" required>
             <option value="1">1</option>
@@ -128,7 +130,6 @@
             <option value="4">4</option>
         </select><br>
 
-        <!-- Dropdown for Room Number -->
         <label for="roomNumber">Room Number:</label>
         <select id="roomNumber" name="roomNumber" required>
             <option value="1">1</option>

@@ -6,6 +6,7 @@ import com.example.hotel.hotelreservation.model.reports.YearlyReservations;
 import com.example.hotel.hotelreservation.model.views.ListaHoteli;
 import com.example.hotel.hotelreservation.model.views.Rezervacii;
 import com.example.hotel.hotelreservation.model.views.SlobodniSobi;
+import com.example.hotel.hotelreservation.service.modelService.GuestService;
 import com.example.hotel.hotelreservation.service.modelService.HotelService;
 import com.example.hotel.hotelreservation.service.modelService.ReservationService;
 import com.example.hotel.hotelreservation.service.reportService.MonthlyReservationsService;
@@ -38,8 +39,9 @@ public class HotelReservationMainController {
     private final YearlyReservationsService yearlyReservationsService;
     private final MostVisitedHotelInMonthService mostVisitedHotelInMonthService;
     private final ReservationService reservationService;
+    private final GuestService guestService;
 
-    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService1, ReservationService reservationService) {
+    public HotelReservationMainController(HotelService hotelService, ListaHoteliService listaHoteliService, SlobodniSobiService slobodniSobiService, RezervaciiService rezervaciiService, MonthlyReservationsService monthlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService, YearlyReservationsService yearlyReservationsService, MostVisitedHotelInMonthService mostVisitedHotelInMonthService1, ReservationService reservationService, GuestService guestService) {
         this.hotelService = hotelService;
         this.listaHoteliService = listaHoteliService;
         this.slobodniSobiService = slobodniSobiService;
@@ -48,6 +50,8 @@ public class HotelReservationMainController {
         this.yearlyReservationsService = yearlyReservationsService;
         this.mostVisitedHotelInMonthService = mostVisitedHotelInMonthService1;
         this.reservationService = reservationService;
+
+        this.guestService = guestService;
     }
 
     @GetMapping
@@ -143,22 +147,22 @@ public class HotelReservationMainController {
 
     @GetMapping("/reservation")
     public String getMakeAReservation(Model model) {
+
         return "reservation";
     }
 
     @PostMapping("/reservation")
-    public ResponseEntity<String> createReservation(@RequestBody Map<String, Object> reservationData) {
-        try {
-            // Dobijanje vrednosti iz tela zahteva
-            LocalDate reservationDate = LocalDate.parse((String) reservationData.get("reservationDate"));
-            String paymentType = (String) reservationData.get("paymentType");
-            Integer price = (Integer) reservationData.get("price");
-            LocalDate checkInDate = LocalDate.parse((String) reservationData.get("checkInDate"));
-            LocalDate checkOutDate = LocalDate.parse((String) reservationData.get("checkOutDate"));
-            Integer roomNumber = (Integer) reservationData.get("roomNumber");
-            Integer hotelId = (Integer) reservationData.get("hotelId");
-            Integer guestId = (Integer) reservationData.get("guestId");
+    public ResponseEntity<String> createReservation(
+            @RequestParam("reservationDate") LocalDate reservationDate,
+            @RequestParam("paymentType") String paymentType,
+            @RequestParam("price") Integer price,
+            @RequestParam("checkInDate") LocalDate checkInDate,
+            @RequestParam("checkOutDate") LocalDate checkOutDate,
+            @RequestParam("roomNumber") Integer roomNumber,
+            @RequestParam("hotelId") Integer hotelId,
+            @RequestParam("guestId") Integer guestId) {
 
+        try {
             // Implementacija logike za pravljenje rezervacije u bazu
             reservationService.createReservation(reservationDate, paymentType, price, checkInDate, checkOutDate, roomNumber, hotelId, guestId);
 
@@ -169,10 +173,52 @@ public class HotelReservationMainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating reservation");
         }
     }
+    @GetMapping("/add_user")
+    public String getAddUser(Model model) {
+
+        return "add_user";
+    }
+
+    @PostMapping("/add_user")
+    public ResponseEntity<String> createUser(
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName
+            ) {
+
+        try {
+            guestService.createUser(firstName, lastName);
+
+            // Redirekcija na /home nakon uspešne rezervacije
+            return ResponseEntity.status(HttpStatus.CREATED).body("User added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding user");
+        }
+    }
 
     @GetMapping("/add_hotel")
     public String getAddHotel(Model model) {
         return "add_hotel";
+    }
+
+    @PostMapping("/add_hotel")
+    public ResponseEntity<String> createHotel(
+            @RequestParam("hotelName") String hotelName,
+            @RequestParam("hotelAddress") String hotelAddress,
+            @RequestParam("cityId") Integer cityId,
+            @RequestParam("roomNumber") Integer roomNumber,
+            @RequestParam("roomType") String roomType
+    ) {
+
+        try {
+            hotelService.createHotel(hotelName, hotelAddress, cityId, roomNumber, roomType);
+
+            // Redirekcija na /home nakon uspešne rezervacije
+            return ResponseEntity.status(HttpStatus.CREATED).body("Hotel added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding hotel");
+        }
     }
 
 }

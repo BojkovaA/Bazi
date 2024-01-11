@@ -7,10 +7,13 @@ import java.util.List;
 
 public interface HotelService {
 
-    List<Hotel> getAllHotels();
-    Hotel getHotelById(Integer id);
-    void saveHotel(Hotel hotel);
-    void deleteHotel(Integer id);
+    void createHotel(
+            String hotelName,
+            String hotelAddress,
+            Integer cityId,
+            Integer roomNumber,
+            String roomType
+    );
 
 
 

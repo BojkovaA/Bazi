@@ -100,39 +100,14 @@
     </div>
 </nav>
 <div class="forma">
-    <h1>Add Hotel</h1>
+    <h1>Add User</h1>
 
-    <form action="/home/add_hotel" method="post">
-        <label for="hotelName">Hotel Name:</label>
-        <input type="text" id="hotelName" name="hotelName" required><br>
+    <form action="/home/add_user" method="post">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required><br>
 
-        <label for="hotelAddress">Hotel Address:</label>
-        <input type="text" id="hotelAddress" name="hotelAddress" required><br>
-
-        <label for="cityId">City ID:</label>
-        <select id="cityId" name="cityId" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select><br>
-
-        <label for="roomNumber">Room Number:</label>
-        <select id="roomNumber" name="roomNumber" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select><br>
-
-        <label for="roomType">Room Type:</label>
-        <select id="roomType" name="roomType" required>
-            <option value="singleBed">Single Bed</option>
-            <option value="doubleBed">Double Bed</option>
-            <option value="balcony">Balcony</option>
-            <option value="suite">Suite</option>
-        </select><br>
-
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required><br>
         <button type="submit">Submit</button>
     </form>
 </div>

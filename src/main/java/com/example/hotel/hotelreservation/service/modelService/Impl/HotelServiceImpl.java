@@ -4,6 +4,7 @@ import com.example.hotel.hotelreservation.model.City;
 import com.example.hotel.hotelreservation.model.Hotel;
 import com.example.hotel.hotelreservation.repository.HotelRepository;
 import com.example.hotel.hotelreservation.service.modelService.HotelService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +19,9 @@ public class HotelServiceImpl implements HotelService {
         this.hotelRepository = hotelRepository;
     }
 
+    @Transactional
     @Override
-    public List<Hotel> getAllHotels() {
-        return hotelRepository.findAll();
+    public void createHotel(String hotelName, String hotelAddress, Integer cityId, Integer roomNumber, String roomType) {
+        hotelRepository.insertHotelAndRooms(hotelName, hotelAddress, cityId, roomNumber, roomType);
     }
-
-    @Override
-    public Hotel getHotelById(Integer id) {
-        return hotelRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public void saveHotel(Hotel hotel) {
-        hotelRepository.save(hotel);
-    }
-
-    @Override
-    public void deleteHotel(Integer id) {
-        hotelRepository.deleteById(id);
-    }
-
-
 }
